@@ -49,16 +49,6 @@ int write_data_cdi_header(FILE *cdi, char* cdiname, char* volume_name, long data
 void write_data_gap_start_track(FILE* cdi);
 void write_data_header_boot_track(FILE* cdi, FILE* iso);
 
-char* program_name = NULL;
-
-void set_program_name( char* name ) {
-	program_name = name;
-}
-
-char* get_program_name() {
-	return program_name;
-}
-
 void print_help() {
 	printf("%sThis proggy was written in order to replace the old (but good) Xeal's bin2boot.\nIt generates a %s*REAL*%s valid CDI file from an ISO.\n\n", KWHT, KRED, KWHT);
 	printf("%sSyntax: ", KBLU);

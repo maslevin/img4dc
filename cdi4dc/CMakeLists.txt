@@ -3,6 +3,7 @@ set(CDI4DC_SOURCES
     src/cdiaudio.c
     src/cdidata.c
     src/common.c
+    src/console.c
     src/main.c
     src/tools.c
     src/edc_ecc.c
