@@ -5,6 +5,9 @@ set(CDI4DC_SOURCES
     src/common.c
     src/main.c
     src/tools.c
+    src/edc_ecc.c
+    src/libedc.c
+    src/patch.c
 )
 
 add_executable(cdi4dc ${CDI4DC_SOURCES})
@@ -14,4 +17,4 @@ target_include_directories(cdi4dc PRIVATE
     ${CMAKE_SOURCE_DIR}/common/inc
 )
 
-target_link_libraries(cdi4dc img4dc-common edc)
+target_link_libraries(cdi4dc)
