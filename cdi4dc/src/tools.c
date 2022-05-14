@@ -34,7 +34,7 @@ uint32_t fsize(FILE *stream) {
 }
 
 // remplir un buffer avec un tableau défini dans cdihead.h
-void fill_buffer(unsigned char *buf, int total_size, int values_array_size, const unsigned int values_array[][2]) {
+void fill_buffer(char* buf, int total_size, int values_array_size, const unsigned int values_array[][2]) {
 	int i, offset;
 	
 	// on remplit de zéro tout le buffer
@@ -50,8 +50,8 @@ void fill_buffer(unsigned char *buf, int total_size, int values_array_size, cons
 // vérifier si l'ISO passé en paramètre contient un IP.BIN
 int check_iso_is_bootable(FILE* iso) {
     uint32_t curpos, length;
-	unsigned char signature[33] = "SEGA SEGAKATANA SEGA ENTERPRISES";
-	unsigned char buf[33];
+	char signature[33] = "SEGA SEGAKATANA SEGA ENTERPRISES";
+	char buf[33];
 	
 	curpos = ftell(iso); /* garder la position courante */
 	fseek(iso, 0L, SEEK_SET);
@@ -122,7 +122,7 @@ int get_iso_msinfo_value(FILE* iso) {
 
 // ecrire size bytes de zéros dans le fichier cdi.
 void write_null_block(FILE *cdi, int size) {
-	unsigned char* buf;
+	char* buf;
 	
 	buf = (char *) malloc(size);
 	memset(buf, 0x0, size);
@@ -132,7 +132,7 @@ void write_null_block(FILE *cdi, int size) {
 
 // ecrire un tableau directement vers le fichier
 void write_array_block(FILE* cdi, int array_size, const int array_entries, const unsigned int values_array[][2]) {
-	unsigned char *buf;
+	char* buf;
 	
 	buf = (char *) malloc(array_size);
 	fill_buffer(buf, array_size, array_entries, values_array);

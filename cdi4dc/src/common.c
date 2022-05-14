@@ -19,9 +19,9 @@ void padding_event(int sector_count);
 // ecrire la piste pregap entre l'audio et le data
 int write_gap_tracks(FILE* cdi) {
 	int i;
-	unsigned char* buf;
+	char* buf;
 
-    buf = (unsigned char *) malloc(gap_sector_size);
+    buf = (char *) malloc(gap_sector_size);
 
 	// écrire Gap 1
 	fill_buffer(buf, gap_sector_size, gap_dummy_sector_size, gap_dummy_sector);
@@ -44,10 +44,10 @@ int write_gap_tracks(FILE* cdi) {
 
 // ecrire des pistes gap entre les données et l'header du cdi situé à la fin du fichier
 void write_gap_end_tracks(FILE *cdi) {
-	unsigned char *buf;
+	char *buf;
 	int i;
 
-    buf = (unsigned char *) malloc(gap_sector_size);
+    buf = (char *) malloc(gap_sector_size);
 	fill_buffer(buf, gap_sector_size, gap_dummy_sector_size, gap_dummy_sector);
 
 	fseek(cdi, ftell(cdi) - 8, SEEK_SET);

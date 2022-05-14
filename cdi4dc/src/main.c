@@ -26,12 +26,20 @@
 
 #include "cdibuild.h"
 #include "tools.h"
-#include <console.h>
 #include <stdlib.h>
 
-#define BUILD_DATE "14 march 2021"
-#define VERSION "0.5b"
+#define BUILD_DATE "14 may 2022"
+#define VERSION "0.5c"
 #define WARNING_MSG "(TO A CD-RW PLEASE AGAIN... BETA VERSION !!!)"
+
+#define KNRM  "\x1B[0m"
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KMAG  "\x1B[35m"
+#define KCYN  "\x1B[36m"
+#define KWHT  "\x1B[37m"
 
 uint32_t x, y; // position ou on doit placer le curseur avant d'écrire le pourcentage
 
@@ -41,19 +49,26 @@ int write_data_cdi_header(FILE *cdi, char* cdiname, char* volume_name, long data
 void write_data_gap_start_track(FILE* cdi);
 void write_data_header_boot_track(FILE* cdi, FILE* iso);
 
+char* program_name = NULL;
+
+void set_program_name( char* name ) {
+	program_name = name;
+}
+
+char* get_program_name() {
+	return program_name;
+}
+
 void print_help() {
-	printf_colored(WHITE, "This proggy was written in order to replace the old (but good) Xeal's bin2boot.\nIt generates a ");
-	printf_colored(LIGHT_RED, "*REAL*");
-	printf_colored(WHITE, " valid CDI file from an ISO.\n\n");
+	printf("%sThis proggy was written in order to replace the old (but good) Xeal's bin2boot.\nIt generates a %s*REAL*%s valid CDI file from an ISO.\n\n", KWHT, KRED, KWHT);
+	printf("%sSyntax: ", KBLU);
+	printf("%s%s <input.iso> <output.cdi> [-d]\n\n", KCYN, get_program_name());
 
-	printf_colored(LIGHT_BLUE, "Syntax: ");
-	printf_colored(LIGHT_CYAN, "%s <input.iso> <output.cdi> [-d]\n\n", get_program_name());
+	printf("%sOptions:\n", KBLU);
+	printf("%s  -d        : Generates a Data/Data image from a MSINFO 0 ISO.\n  <nothing> : Generates a Audio/Data image from a MSINFO 11702 ISO.\n\n", KCYN);
 
-	printf_colored(LIGHT_BLUE, "Options:\n");
-	printf_colored(LIGHT_CYAN, "  -d        : Generates a Data/Data image from a MSINFO 0 ISO.\n  <nothing> : Generates a Audio/Data image from a MSINFO 11702 ISO.\n\n");
-
-	printf_colored(YELLOW, "This proggy's still dedicated to Ron even if today it isn't the 6 july !\n\nGreetings goes to:\n  BlackAura, Fackue, Xeal, DeXT, Heiko Eissfeldt and Joerg Schilling.\n\n");
-	printf_colored(LIGHT_GREEN, "SiZ! for Dreamcast-Scene / %s... The legend will never die...\n", BUILD_DATE);
+	printf("%sThis proggy's still dedicated to Ron even if today it isn't the 6 july !\n\nGreetings goes to:\n  BlackAura, Fackue, Xeal, DeXT, Heiko Eissfeldt and Joerg Schilling.\n\n", KBLU);
+	printf("%sSiZ! for Dreamcast-Scene / %s... The legend will never die...\n", KGRN, BUILD_DATE);
 }
 
 void start_progressbar() {
@@ -63,7 +78,7 @@ void start_progressbar() {
 
 void padding_event(int sector_count) {
 	gotoXY(x, y);
-	printf_colored(LIGHT_RED, "%d block(s) : padding is needed...\n", sector_count);
+	printf("%s%d block(s) : padding is needed...\n", KRED, sector_count);
 }
 
 void writing_data_track_event(uint32_t current_pos, uint32_t total_iso_size) {
@@ -72,20 +87,20 @@ void writing_data_track_event(uint32_t current_pos, uint32_t total_iso_size) {
 	float p1 = (float)current_pos / (float)total_iso_size;
 	uint32_t percent = p1 * 100;
 	printf("[");
-	printf_colored(LIGHT_RED, "%u/%u", current_pos, total_iso_size);
+	printf("%s%u/%u", KRED, current_pos, total_iso_size);
 	printf("] - ");
-	printf_colored(LIGHT_MAGENTA, "%u%%\r", percent);
+	printf("%s%u%%\r", KMAG, percent);
 }
 
 void echo(char *label) {
-	printf_colored(WHITE, label);
+	printf("%s%s", KWHT, label);
 }
 
 void print_head() {
-	printf_colored(LIGHT_RED, "CDI4DC");
-	printf_colored(WHITE, " - ");
-	printf_colored(YELLOW, VERSION);
-	printf_colored(WHITE, " - Written by SiZiOUS\nhttp://www.sizious.com/\n\n");
+	printf("%sCDI4DC", KRED);
+	printf("%s - ", KWHT);
+	printf("%s%s", KYEL, VERSION);
+	printf("%s - Written by SiZiOUS\nhttp://www.sizious.com/\n\n", KWHT);
 }
 
 void create_audio_data_image(FILE* infp, FILE* outfp, char* outfilename) {
@@ -126,9 +141,9 @@ void create_audio_data_image(FILE* infp, FILE* outfp, char* outfilename) {
 
 	space_used = (float)(get_total_cdi_space_used(data_blocks_count) * data_sector_size) / 1024 / 1024;
 	gotoXY(x, y);
-	printf_colored(LIGHT_CYAN, "\n%25c %d ", ' ',  data_blocks_count);
+	printf("%s\n%25c %d ", KCYN, ' ', data_blocks_count);
 	printf("block(s) written (");
-	printf_colored(LIGHT_GREEN, "%5.2fMB ", space_used);
+	printf("%s%5.2fMB ", KGRN, space_used);
 	printf("used)\n");
 
 	// ecrire en tête (le footer)
@@ -169,9 +184,9 @@ void create_data_data_image(FILE* infp, FILE* outfp, char* outfilename) {
 
 	space_used = (float)(get_total_cdi_space_used(data_blocks_count) * data_sector_size) / 1024 / 1024;
 	gotoXY(x, y);
-	printf_colored(LIGHT_CYAN, "\n%25c %d ", ' ',  data_blocks_count);
+	printf("%s\n%25c %d ", KCYN, ' ', data_blocks_count);
 	printf("block(s) written (");
-	printf_colored(LIGHT_GREEN, "%5.2fMB ", space_used);
+	printf("%s%5.2fMB ", KGRN, space_used);
 	printf("used)\n");
 
 	// ecrire les tracks GAP
@@ -212,19 +227,19 @@ int main(int argc, char *argv[]) {
 
 	infp = fopen(argv[1], "rb");
 	if (infp == NULL) {
-		printf_stderr_colored(LIGHT_RED, "error: unable to open source file!");
+		fprintf(stderr, "%serror: unable to open source file!", KRED);
 		return 2;
 	}
 
 	if (check_iso_is_bootable(infp) == 0) {
-		printf_stderr_colored(LIGHT_RED, "warning: %s seems not to be bootable!\n\n", argv[1]);
+		fprintf(stderr, "%swarning: %s seems not to be bootable!\n\n", KRED, argv[1]);
 	}
 
 	strcpy(outfilename, argv[2]);
 
 	outfp = fopen(outfilename, "wb");
 	if (outfp == NULL) {
-		printf_stderr_colored(LIGHT_RED, "error: unable to write destination file!");
+		fprintf(stderr, "%serror: unable to write destination file!", KRED);
 		return 2;
 	}
 
@@ -236,7 +251,7 @@ int main(int argc, char *argv[]) {
 		create_audio_data_image(infp, outfp, outfilename);
 	}
 
-	printf_colored(LIGHT_CYAN, "\nWoohoo... All done OK!\nYou can burn it now %s...\n", WARNING_MSG);
+	printf("%s\nWoohoo... All done OK!\nYou can burn it now %s...\n", KCYN, WARNING_MSG);
 
 	fclose(outfp);
 	fclose(infp);

@@ -15,7 +15,7 @@
 
 #include <stdio.h>
 #include "cdihead.h"
-#include "libedc.h"
+#include "../../edc/inc/libedc.h"
 
 int write_gap_tracks(FILE* cdi);
 int write_data_track(FILE* cdi, FILE* iso);
