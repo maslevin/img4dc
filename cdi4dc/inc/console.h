@@ -34,9 +34,6 @@ void set_program_name(char *argv0);
 
 void text_color(int color);
 
-int printf_colored(int color, const char *format, ...);
-int printf_stderr_colored(int color, const char *format, ...);
-
 void gotoXY(int x, int y);
 int whereX();
 int whereY();

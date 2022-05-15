@@ -45,41 +45,6 @@ void text_color(int color) {
 #endif
 }
 
-// Extracted from the GNU C Library.
-// http://stackoverflow.com/questions/4867229/code-for-printf-function-in-c/4867288#4867288
-int printf_colored(int color, const char *format, ...) {
-	va_list arg;
-	int done;
-	
-	text_color(color);	
-	
-	va_start(arg, format);
-	done = vfprintf(stdout, format, arg);
-	va_end(arg);
-	
-	// Default console color
-	text_color(LIGHT_GRAY);
-	
-	return done;
-}
-
-// Yeah, this function was duplicated... Maybe this can be refactored
-int printf_stderr_colored(int color, const char *format, ...) {
-	va_list arg;
-	int done;
-
-	text_color(color);
-	
-	va_start(arg, format);
-	done = vfprintf(stderr, format, arg);
-	va_end(arg);
-
-	// Default console color
-	text_color(LIGHT_GRAY);
-
-	return done;	
-}
-
 // aller à la position (X;Y) dans une appli Win32 Console
 void gotoXY(int x, int y) {
 #ifdef WIN32

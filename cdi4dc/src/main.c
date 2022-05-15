@@ -27,6 +27,7 @@
 #include "cdibuild.h"
 #include "tools.h"
 #include <stdlib.h>
+#include "console.h"
 
 #define BUILD_DATE "14 may 2022"
 #define VERSION "0.5c"
